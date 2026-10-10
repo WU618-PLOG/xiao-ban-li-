@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>小板栗 · Little Chestnut</title>
+  <meta name="description" content="像素风日历待办，每天完成小目标，解锁隐藏任务和陪伴伙伴">
+
+  <!-- PWA：可安装到电脑桌面 / 手机主屏幕，支持离线使用 -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#fff4e6">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="小板栗">
+  <link rel="icon" type="image/png" href="icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar pixel-box">
+      <div class="brand">
+        <span class="brand-block" aria-hidden="true"></span>
+        <h1 class="brand-name">小板栗</h1>
+      </div>
+
+      <div class="month-nav">
+        <button class="pixel-btn icon-btn" id="btn-prev" aria-label="上一月">◀</button>
+        <div class="month-title" id="month-title">——年—月</div>
+        <button class="pixel-btn icon-btn" id="btn-next" aria-label="下一月">▶</button>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="pixel-btn" id="btn-today">回今天</button>
+        <button class="pixel-btn" id="btn-focus">专注模式</button>
+        <button class="pixel-btn" id="btn-sound">音效·开</button>
+        <button class="pixel-btn" id="btn-theme">夜晚模式</button>
+        <button class="pixel-btn" id="btn-install" hidden>安装到桌面</button>
+      </div>
+    </header>
+
+    <div class="countdown-bar pixel-box" id="countdown-bar" hidden></div>
+
+    <main class="calendar pixel-box">
+      <div class="weekdays" id="weekdays"></div>
+      <div class="days-grid" id="days-grid"></div>
+    </main>
+
+    <p class="footnote">点开格子记录待办 · 当日全部完成会解锁隐藏任务 · 左下角的小伙伴可以戳一戳</p>
+  </div>
+
+  <!-- 像素陪伴小人 -->
+  <div class="pet" id="pet-root" title="戳戳我～"></div>
+
+  <!-- 日期详情弹窗 -->
+  <div class="modal-mask" id="modal-mask" hidden>
+    <div class="modal pixel-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <header class="modal-head">
+        <div class="modal-date">
+          <h2 class="modal-title" id="modal-title">——</h2>
+          <p class="modal-sub" id="modal-sub">——</p>
+        </div>
+        <button class="pixel-btn icon-btn" id="btn-modal-close" aria-label="关闭">✕</button>
+      </header>
+
+      <div class="modal-body">
+        <div class="focus-badge" id="modal-focus" hidden></div>
+        <ul class="todo-list" id="todo-list"></ul>
+        <p class="todo-empty" id="todo-empty">今天想做点什么呢？写一条试试～</p>
+        <form class="todo-add" id="todo-form">
+          <input class="todo-input" id="todo-input" maxlength="60" placeholder="添加一条待做事项…" autocomplete="off">
+          <div class="cat-picker" id="cat-picker">
+            <button type="button" class="cat-btn cat-work" data-cat="work">工作</button>
+            <button type="button" class="cat-btn cat-life" data-cat="life">生活</button>
+          </div>
+          <button class="pixel-btn btn-add" type="submit" aria-label="添加">＋</button>
+        </form>
+      </div>
+
+      <section class="countdown-zone" id="countdown-zone"></section>
+      <section class="hidden-zone" id="hidden-zone"></section>
+    </div>
+  </div>
+
+  <!-- 专注模式全屏层 -->
+  <div class="focus-layer" id="focus-layer" hidden>
+    <button class="pixel-btn focus-exit" id="btn-focus-exit">结束专注 ✕</button>
+    <div class="focus-stage">
+      <div class="focus-bubble" id="focus-bubble" hidden></div>
+      <canvas class="focus-canvas" id="focus-canvas" width="192" height="192"></canvas>
+      <p class="focus-time" id="focus-time">00:00:00</p>
+    </div>
+    <p class="focus-hint" id="focus-hint">仅剩你和小伙伴 · 按 ESC 或右上角按钮结束</p>
+  </div>
+
+  <!-- 通用庆祝层（隐藏任务 / 新伙伴 / 专注结算） -->
+  <div class="celebrate" id="celebrate" hidden>
+    <div class="celebrate-box pixel-box">
+      <p class="celebrate-top" id="celebrate-title">✦ 全部完成 ✦</p>
+      <p class="celebrate-sub" id="celebrate-sub" hidden></p>
+      <p class="celebrate-task" id="celebrate-task"></p>
+      <button class="pixel-btn" id="btn-celebrate-ok">开心收下</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="js/tasks.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/pet.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/pwa.js"></script>
+</body>
+</html>
